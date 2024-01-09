@@ -13,8 +13,6 @@ function neuron_theme_files(){
    wp_enqueue_script('bootsnav',get_template_directory_uri() .'/assets/js/bootsnav.js', array('jquery'),'1.0', true);
    wp_enqueue_script('carousel',get_template_directory_uri() .'/assets/js/owl.carousel.min.js', array('jquery'),'1.0', true);
    wp_enqueue_script('wow',get_template_directory_uri() .'/assets/js/wow.min.js', array('jquery'),'1.0', true);
-   wp_enqueue_script('ajaxchimp',get_template_directory_uri() .'/assets/js/ajaxchimp.js', array('jquery'),'1.0', true);
-   wp_enqueue_script('ajaxchimp-config',get_template_directory_uri() .'/assets/js/ajaxchimp-config.js', array('jquery'),'1.0', true);
    wp_enqueue_script('script',get_template_directory_uri() .'/assets/js/script.js', array('jquery'),'1.0', true);
 }
 add_action('wp_enqueue_scripts','neuron_theme_files');
@@ -73,7 +71,7 @@ function neuron_theme_supports(){
 }
 add_action('after_setup_theme','neuron_theme_supports');
 
-
+add_filter('widget_text','do_shortcode');
 
 // register custom post
 // function neuron_theme_custom_post(){
@@ -154,5 +152,58 @@ function neuron_widgets_init() {
 			'after_title'   => '</h3>',
 		)
 	);
+
+    register_sidebar(
+		array(
+			'name'          => esc_html__( 'Footer Three', 'neuron' ),
+			'id'            => 'footer-3',
+			'description'   => esc_html__( 'Add footer three widgets here.', 'neuron' ),
+			'before_widget' => '<div id="%1$s" class="widget %2$s">',
+			'after_widget'  => '</div>',
+			'before_title'  => '<h3 class="widget-title">',
+			'after_title'   => '</h3>',
+		)
+	);
+
+    register_sidebar(
+		array(
+			'name'          => esc_html__( 'Footer Four', 'neuron' ),
+			'id'            => 'footer-4',
+			'description'   => esc_html__( 'Add footer Four widgets here.', 'neuron' ),
+			'before_widget' => '<div id="%1$s" class="widget %2$s">',
+			'after_widget'  => '</div>',
+			'before_title'  => '<h3 class="widget-title">',
+			'after_title'   => '</h3>',
+		)
+	);
+
+
 }
 add_action( 'widgets_init', 'neuron_widgets_init' );
+
+
+function thumbpost_list_shortcode($atts){
+    extract( shortcode_atts( array(
+        'count' => '3',
+    ), $atts ));
+
+    $q = new WP_Query(
+        array('posts_per_page' => $count, 'post_type' => 'post')
+    );
+
+    $list = '<ul>';
+    while($q->have_posts()) : $q->the_post();
+    $idd = get_the_ID();
+    $list .= '
+    <li>
+    '.get_the_post_thumbnail($idd, 'thumbnail').'
+    <p><a href="'.get_permalink().'">'.get_the_title().'</a></p>
+    <span>'.get_the_date('d F Y', $idd).'</span>
+    </li>
+';
+    endwhile;
+    $list .='</ul>';
+    wp_reset_query();
+    return $list;
+}
+add_shortcode('thumb_posts','thumbpost_list_shortcode');
