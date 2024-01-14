@@ -900,6 +900,7 @@ ul.cart-list>li.total>a.btn:hover {
     bottom: -30%;
     width: 100%;
     padding: 20px;
+	color: #fff;
 }
 .portfolio-item:hover .portfolio-details {
 	bottom: 0;

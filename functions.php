@@ -125,6 +125,17 @@ function neuron_theme_custom_post(){
             'show_ui' => true
         )
     );
+
+    register_post_type('work',
+        array(
+            'labels' => array(
+                'name' => __('Works'),
+                'singular_name' => __('work')
+            ),
+            'supports' => array('title','editor','custom-fields','thumbnail','page-attributes'),
+            'public' => true
+        )
+    );
 }
 
 
